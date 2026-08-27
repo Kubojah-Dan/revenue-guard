@@ -34,6 +34,11 @@ app.include_router(routes_actions.router)
 app.include_router(routes_health.router)
 app.include_router(routes_upload.router)
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    from fastapi.responses import Response
+    return Response(status_code=204)
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
