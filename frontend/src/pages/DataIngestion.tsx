@@ -106,21 +106,7 @@ type UploadState =
 
 export default function DataIngestion() {
   const [state, setState] = useState<UploadState>({ phase: "idle" });
-  const [history, setHistory] = useState<UploadHistoryEntry[]>([
-    {
-      id: "seed-1",
-      file: new File(["mock"], "seed_q3_invoices.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
-      response: {
-        filename: "seed_q3_invoices.xlsx",
-        file_type: ".xlsx",
-        records_processed: 142,
-        tables_updated: ["invoices", "payments"],
-        status: "success",
-        message: "Successfully ingested 142 records into invoices, payments and refreshed leakage engine.",
-      },
-      uploadedAt: new Date(Date.now() - 3600000 * 3).toISOString(),
-    },
-  ]);
+  const [history, setHistory] = useState<UploadHistoryEntry[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fadeUp = getFadeUp();
 

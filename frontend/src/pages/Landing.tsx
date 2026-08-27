@@ -17,7 +17,7 @@ import { LeakageByTypeChart } from "../components/charts/LeakageByTypeChart";
 import { SeverityDonutChart } from "../components/charts/SeverityDonutChart";
 import { getScrollReveal, EASE, DURATION, staggerContainer, getFadeUp } from "../lib/motion";
 import { formatINRShort } from "../lib/format";
-import summaryData from "../mocks/mock_api.json";
+import { useSummary } from "../hooks/useSummary";
 
 // ── Hero background canvas animation ─────────────────────────
 function HeroCanvas() {
@@ -203,9 +203,8 @@ function LandingNav() {
 
   return (
     <header
-      className={`sticky top-0 z-40 flex items-center justify-between px-8 py-4 transition-all duration-200 ${
-        scrolled ? "bg-white/85 backdrop-blur-md border-b border-[var(--color-border)]" : "bg-transparent"
-      }`}
+      className={`sticky top-0 z-40 flex items-center justify-between px-8 py-4 transition-all duration-200 ${scrolled ? "bg-white/85 backdrop-blur-md border-b border-[var(--color-border)]" : "bg-transparent"
+        }`}
     >
       <div className="flex items-center gap-2">
         <div className="w-7 h-7 rounded-md bg-[var(--color-black)] flex items-center justify-center">
@@ -239,12 +238,13 @@ function LandingNav() {
 // ── Main Landing Page ─────────────────────────────────────────
 export default function Landing() {
   const navigate = useNavigate();
-  const summary = (summaryData as Record<string, unknown>)["GET /api/recoverable-summary"] as {
-    total_leakage_rs: number;
-    total_recoverable_rs: number;
-    active_alerts: number;
-    by_leak_type: Array<{ leak_type: string; leakage_rs: number; recoverable_rs: number; count: number }>;
-    by_severity: Array<{ severity: string; leakage_rs: number; recoverable_rs: number; count: number }>;
+  const { data: summaryRaw } = useSummary();
+  const summary = summaryRaw ?? {
+    total_leakage_rs: 0,
+    total_recoverable_rs: 0,
+    active_alerts: 0,
+    by_leak_type: [] as Array<{ leak_type: string; leakage_rs: number; recoverable_rs: number; count: number }>,
+    by_severity: [] as Array<{ severity: string; leakage_rs: number; recoverable_rs: number; count: number }>,
   };
 
   const displayCardData = [
@@ -294,7 +294,7 @@ export default function Landing() {
   const trust = [
     { icon: <Shield size={16} />, title: "Deterministic, not a black box", desc: "Every alert cites the exact process step that broke, the rule violated, and the evidence." },
     { icon: <FileText size={16} />, title: "Every action is audited", desc: "Full tamper-evident log of who executed what, when, and with what outcome." },
-    { icon: <Zap size={16} />, title: "Mock-first, drop-in ready", desc: "Built against a frozen API contract. Swap one env var to point at a real backend." },
+    { icon: <Zap size={16} />, title: "Live data, drop-in ready", desc: "Built against the live SQLite dataset. All charts and metrics reflect real ingested data." },
   ];
 
   return (
@@ -439,7 +439,7 @@ export default function Landing() {
               <div className="text-micro mb-3">Live data preview</div>
               <h2 className="text-h1 text-[var(--color-ink)]">This is the real product.</h2>
               <p className="text-sm text-[var(--color-muted)] mt-3 max-w-sm mx-auto">
-                Real charts, real mock data. Not a screenshot.
+                Real charts, real data from your dataset. Not a screenshot.
               </p>
             </div>
           </RevealSection>
@@ -450,7 +450,7 @@ export default function Landing() {
               {/* Chrome bar */}
               <div className="bg-[var(--color-surface-2)] px-4 py-3 flex items-center gap-2 border-b border-[var(--color-border)]">
                 <div className="flex gap-1.5">
-                  {["#ffbd2e","#ff6058","#27c93f"].map((c) => (
+                  {["#ffbd2e", "#ff6058", "#27c93f"].map((c) => (
                     <div key={c} className="w-3 h-3 rounded-full" style={{ background: c }} />
                   ))}
                 </div>

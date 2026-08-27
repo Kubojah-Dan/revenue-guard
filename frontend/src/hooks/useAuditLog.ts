@@ -1,12 +1,9 @@
 import { useState } from "react";
-import mockData from "../mocks/mock_api.json";
 import type { AuditLogEntry } from "../types/interfaces";
 
-const seedLog: AuditLogEntry[] = (mockData as { audit_log_sample: AuditLogEntry[] }).audit_log_sample;
-
-/** In-session audit log: seed from mock, append live executions. */
+/** In-session audit log: starts empty, append live executions. */
 export function useAuditLog() {
-  const [log, setLog] = useState<AuditLogEntry[]>(seedLog);
+  const [log, setLog] = useState<AuditLogEntry[]>([]);
 
   function appendEntry(entry: AuditLogEntry) {
     setLog((prev) => [entry, ...prev]);
