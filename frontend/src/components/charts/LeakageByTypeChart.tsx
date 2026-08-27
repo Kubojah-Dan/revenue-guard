@@ -7,15 +7,16 @@ interface Props {
 }
 
 const SERIES_COLORS = [
-  "#5c7cfa","#6d5bd0","#4dab89","#b8862e",
-  "#7a8db5","#c08090","#4a9090","#a07040",
+  "#5c7cfa", "#6d5bd0", "#4dab89", "#b8862e",
+  "#7a8db5", "#c08090", "#4a9090", "#a07040",
 ];
 
 export function LeakageByTypeChart({ data }: Props) {
+  if (!data || data.length === 0) return <div className="h-[240px] flex items-center justify-center text-sm text-[var(--color-muted)]">No leakage data</div>;
   const sorted = [...data].sort((a, b) => b.leakage_rs - a.leakage_rs);
-  const labels  = sorted.map(d => formatLabel(d.leak_type));
+  const labels = sorted.map(d => formatLabel(d.leak_type));
   const leakage = sorted.map(d => d.leakage_rs);
-  const recov   = sorted.map(d => d.recoverable_rs);
+  const recov = sorted.map(d => d.recoverable_rs);
 
   const option = {
     animation: true,

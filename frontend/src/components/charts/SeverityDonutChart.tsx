@@ -9,12 +9,13 @@ interface Props {
 // Semantic severity colors matching CSS variables
 const SEVERITY_COLORS: Record<string, string> = {
   critical: "#c0152f",
-  high:     "#b8862e",
-  medium:   "#8a8a8a",
-  low:      "#c9c9c9",
+  high: "#b8862e",
+  medium: "#8a8a8a",
+  low: "#c9c9c9",
 };
 
 export function SeverityDonutChart({ data }: Props) {
+  if (!data || data.length === 0) return <div className="h-[240px] flex items-center justify-center text-sm text-[var(--color-muted)]">No severity data</div>;
   const pieData = data.map((d) => ({
     name: formatLabel(d.severity),
     value: d.leakage_rs,

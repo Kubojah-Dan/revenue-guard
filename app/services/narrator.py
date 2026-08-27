@@ -4,8 +4,6 @@ import urllib.request
 import urllib.error
 from typing import Dict, Any
 
-NARRATOR_MODE = os.environ.get("NARRATOR_MODE", "mock").lower()
-
 SYSTEM_PROMPT = """You are a precise financial revenue loss narrator for the Revenue Process Twin system.
 Your job is to explain the provided revenue leakage evidence in clear, professional English.
 
@@ -21,6 +19,9 @@ def narrator(evidence_json: Dict[str, Any], query: str = "") -> Dict[str, Any]:
     Generates an evidence-grounded English narrative for /api/chat based on live SQLite evidence.
     Returns dictionary matching API contract shape.
     """
+    # Read NARRATOR_MODE fresh on every call (not cached at import time)
+    narrator_mode = os.environ.get("NARRATOR_MODE", "mock").lower()
+    
     cust_id = evidence_json.get("customer_id", "SYSTEM_WIDE")
     cust_name = evidence_json.get("customer_name", "Enterprise Account")
     leak_paise = evidence_json.get("leak_amount_paise", 0)
@@ -58,7 +59,7 @@ def narrator(evidence_json: Dict[str, Any], query: str = "") -> Dict[str, Any]:
     answer = None
 
     # 1. If NARRATOR_MODE is live, attempt Ollama HTTP call
-    if NARRATOR_MODE == "live":
+    if narrator_mode == "live":
         try:
             ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
             ollama_model = os.environ.get("OLLAMA_MODEL", "phi4-mini")
@@ -66,7 +67,7 @@ def narrator(evidence_json: Dict[str, Any], query: str = "") -> Dict[str, Any]:
             prompt_text = f"{SYSTEM_PROMPT}\nEvidence JSON: {json.dumps(evidence_json)}\nUser Query: {query}\nNarrative:"
             req_data = json.dumps({"model": ollama_model, "prompt": prompt_text, "stream": False}).encode("utf-8")
             req = urllib.request.Request(url, data=req_data, headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=3) as resp:
+            with urllib.request.urlopen(req, timeout=30) as resp:
                 res_json = json.loads(resp.read().decode("utf-8"))
                 answer = res_json.get("response", "").strip()
         except Exception:

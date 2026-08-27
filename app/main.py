@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()  # Load .env before any other imports read env vars
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import (
