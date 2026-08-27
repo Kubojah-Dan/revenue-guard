@@ -58,7 +58,7 @@ export const handlers = [
     );
     // Default: return first canned response
     const result = match ? match.response : chats[0].response;
-    return HttpResponse.json(result);
+    return HttpResponse.json(result as Record<string, unknown>);
   }),
 
   // POST /api/actions/execute
@@ -91,10 +91,10 @@ export const handlers = [
     // Canned realistic response
     const tableMap: Record<string, string[]> = {
       ".xlsx": ["invoices", "payments"],
-      ".xls":  ["invoices", "payments"],
-      ".csv":  ["events"],
+      ".xls": ["invoices", "payments"],
+      ".csv": ["events"],
       ".json": ["alerts", "customers"],
-      ".zip":  ["invoices", "payments", "events", "customers"],
+      ".zip": ["invoices", "payments", "events", "customers"],
     };
     const recordMap: Record<string, number> = {
       ".xlsx": 142, ".xls": 98, ".csv": 310, ".json": 58, ".zip": 524,

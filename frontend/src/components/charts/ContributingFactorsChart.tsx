@@ -63,10 +63,10 @@ export function ContributingFactorsChart({ data, highlightIndex, onFactorClick }
 
   const onEvents = onFactorClick
     ? {
-        click: (params: { dataIndex: number }) => {
-          onFactorClick(params.dataIndex);
-        },
-      }
+      click: (params: { dataIndex: number }) => {
+        onFactorClick(params.dataIndex);
+      },
+    }
     : {};
 
   return (
@@ -74,7 +74,7 @@ export function ContributingFactorsChart({ data, highlightIndex, onFactorClick }
       option={option}
       style={{ height: `${Math.max(100, data.length * 40)}px`, width: "100%" }}
       notMerge
-      onEvents={onEvents}
+      onEvents={onEvents as Record<string, Function>}
     />
   );
 }

@@ -1,4 +1,5 @@
-import { useState, useRef, useCallback, DragEvent } from "react";
+import { useState, useRef, useCallback } from "react";
+import type { DragEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileSpreadsheet, FileText, FileCode, Archive, Upload,

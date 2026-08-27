@@ -32,9 +32,9 @@ export default function Dashboard() {
   const fadeUp = getFadeUp();
 
   // Derive trend data — use trend_60d if available, else trend_30d
-  const trendData = (summary as (RecoverableSummary & { trend_60d?: typeof summary.trend_30d }) | undefined)?.trend_60d
-    ?? summary?.trend_30d
-    ?? [];
+  const trendData = summary
+    ? ((summary as RecoverableSummary & { trend_60d?: typeof summary.trend_30d }).trend_60d ?? summary.trend_30d ?? [])
+    : [];
 
   return (
     <PageShell title="Dashboard">
@@ -60,20 +60,20 @@ export default function Dashboard() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <KpiCard
               title="Total Leakage"
-              value={<AnimatedMoney value={summary.total_leakage_rs} />}
-              sub={`Across ${summary.by_leak_type.length} leak types`}
+              value={<AnimatedMoney value={summary.total_leakage_rs ?? 0} />}
+              sub={`Across ${(summary.by_leak_type ?? []).length} leak types`}
               icon={<TrendingDown size={14} />}
             />
             <KpiCard
               title="Total Recoverable"
-              value={<AnimatedMoney value={summary.total_recoverable_rs} accent />}
-              sub={`${Math.round((summary.total_recoverable_rs / summary.total_leakage_rs) * 100)}% recovery rate`}
+              value={<AnimatedMoney value={summary.total_recoverable_rs ?? 0} accent />}
+              sub={`${Math.round(((summary.total_recoverable_rs ?? 0) / (summary.total_leakage_rs || 1)) * 100)}% recovery rate`}
               icon={<BadgeDollarSign size={14} />}
               accent
             />
             <KpiCard
               title="Active Alerts"
-              value={<span className="tabular font-display">{summary.active_alerts}</span>}
+              value={<span className="tabular font-display">{summary.active_alerts ?? 0}</span>}
               sub="Requiring attention"
               icon={<AlertTriangle size={14} />}
             />
@@ -88,11 +88,11 @@ export default function Dashboard() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-bold tabular font-display text-[var(--color-ink)]">
-                  {summary.avg_risk_score}
+                  {summary.avg_risk_score ?? 0}
                 </span>
               </div>
               <div className="mt-auto">
-                <MiniGauge value={summary.avg_risk_score} />
+                <MiniGauge value={summary.avg_risk_score ?? 0} />
               </div>
               <div className="text-xs text-[var(--color-muted)] -mt-1">Out of 100</div>
             </motion.div>
@@ -102,11 +102,11 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <motion.div variants={fadeUp} className="card p-5">
               <h2 className="text-h3 text-[var(--color-ink)] mb-4">Leakage by Type</h2>
-              <LeakageByTypeChart data={summary.by_leak_type} />
+              <LeakageByTypeChart data={summary.by_leak_type ?? []} />
             </motion.div>
             <motion.div variants={fadeUp} className="card p-5">
               <h2 className="text-h3 text-[var(--color-ink)] mb-4">Leakage by Severity</h2>
-              <SeverityDonutChart data={summary.by_severity} />
+              <SeverityDonutChart data={summary.by_severity ?? []} />
             </motion.div>
           </div>
 
@@ -166,7 +166,7 @@ export default function Dashboard() {
                           <div className="text-xs text-[var(--color-muted)]">{alert.alert_id}</div>
                         </td>
                         <td className="text-[var(--color-text-secondary)]">
-                          {alert.leak_type.replace(/_/g, " ")}
+                          {(alert.leak_type ?? "").replace(/_/g, " ")}
                         </td>
                         <td><SeverityBadge severity={alert.severity} /></td>
                         <td className="text-right"><MoneyValue value={alert.leak_amount_rs} /></td>
@@ -182,7 +182,7 @@ export default function Dashboard() {
 
           {/* Severity summary strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {summary.by_severity.map((s, i) => (
+            {(summary.by_severity ?? []).map((s) => (
               <motion.div key={s.severity} variants={fadeUp} className="card p-4">
                 <SeverityBadge severity={s.severity} />
                 <div className="mt-2 text-xs text-[var(--color-muted)]">{s.count} alerts</div>
@@ -192,6 +192,7 @@ export default function Dashboard() {
               </motion.div>
             ))}
           </div>
+
         </motion.div>
       )}
     </PageShell>
