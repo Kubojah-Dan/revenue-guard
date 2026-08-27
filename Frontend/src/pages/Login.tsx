@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Shield, ArrowRight, CheckCircle2, Lock, Mail } from "lucide-react";
+import { Shield, ArrowRight, Lock, Mail } from "lucide-react";
 
-/** Official Google "G" SVG */
+/** Official Google 4-color "G" SVG */
 function GoogleLogo() {
   return (
-    <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+    <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
       <path
         fill="#4285F4"
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -81,31 +81,59 @@ export default function Login() {
         </span>
       </header>
 
-      {/* Login Card */}
-      <main className="max-w-md w-full mx-auto my-auto z-10 py-8">
+      {/* Wider Login Card (max-w-xl = 576px) */}
+      <main className="max-w-xl w-full mx-auto my-auto z-10 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white p-8 rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-elevation-2)] space-y-6"
+          className="bg-white p-8 sm:p-10 rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-elevation-2)] space-y-6"
         >
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--color-accent-light)] text-[var(--color-accent)] text-xs font-semibold mb-3">
               <Shield size={13} />
               Secure Enterprise Portal
             </div>
-            <h1 className="text-2xl font-bold text-[var(--color-ink)] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-ink)] tracking-tight">
               Sign in to your account
             </h1>
-            <p className="text-xs text-[var(--color-muted)] mt-1">
+            <p className="text-xs sm:text-sm text-[var(--color-muted)] mt-1">
               Access your revenue process twin dashboard and active leakage alerts.
             </p>
           </div>
 
+          {/* Primary Google OAuth button at TOP */}
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={isGoogleLoading}
+            className="w-full py-3.5 px-5 rounded-xl border border-[var(--color-border)] bg-white text-[var(--color-ink)] font-semibold text-sm hover:bg-gray-50 hover:shadow-md transition-all shadow-xs flex items-center justify-center gap-3"
+          >
+            {isGoogleLoading ? (
+              <span className="text-gray-500 font-medium">Connecting to Google...</span>
+            ) : (
+              <>
+                <GoogleLogo />
+                <span>Continue with Google</span>
+              </>
+            )}
+          </button>
+
+          {/* Clean Divider */}
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[var(--color-border)]" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase font-bold text-gray-400 tracking-wider">
+              <span className="bg-white px-3">or sign in with email</span>
+            </div>
+          </div>
+
+          {/* Email Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-[var(--color-ink)] mb-1.5">
-                Work Email
+                Work Email Address
               </label>
               <div className="relative">
                 <input
@@ -114,9 +142,9 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@company.com"
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-xs text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] transition-all font-medium"
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] transition-all font-medium"
                 />
-                <Mail size={15} className="absolute left-3 top-3 text-gray-400" />
+                <Mail size={16} className="absolute left-3 top-3 text-gray-400" />
               </div>
             </div>
 
@@ -131,48 +159,21 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-xs text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] transition-all font-medium"
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] transition-all font-medium"
                 />
-                <Lock size={15} className="absolute left-3 top-3 text-gray-400" />
+                <Lock size={16} className="absolute left-3 top-3 text-gray-400" />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 rounded-xl bg-[var(--color-ink)] text-white font-semibold text-xs hover:bg-black transition-all shadow-md flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-4 rounded-xl bg-[var(--color-ink)] text-white font-semibold text-sm hover:bg-black transition-all shadow-md flex items-center justify-center gap-2"
             >
               {isLoading ? "Signing in..." : "Sign In with Email"}
-              <ArrowRight size={14} />
+              <ArrowRight size={16} />
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[var(--color-border)]" />
-            </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-bold text-gray-400 tracking-wider">
-              <span className="bg-white px-2">Or continue with</span>
-            </div>
-          </div>
-
-          {/* Google OAuth button */}
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            disabled={isGoogleLoading}
-            className="w-full py-3 px-4 rounded-xl border border-[var(--color-border)] bg-white text-[var(--color-ink)] font-semibold text-xs hover:bg-gray-50 transition-all shadow-xs flex items-center justify-center gap-2.5"
-          >
-            {isGoogleLoading ? (
-              <span className="text-gray-400">Connecting to Google...</span>
-            ) : (
-              <>
-                <GoogleLogo />
-                Continue with Google
-              </>
-            )}
-          </button>
         </motion.div>
       </main>
 

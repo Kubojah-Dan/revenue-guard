@@ -23,7 +23,6 @@ const RV = {
 function HeroCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
-  const heroRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -134,7 +133,7 @@ function LandingNav() {
           <div className="w-8 h-8 rounded-xl bg-white border border-black/[0.08] shadow-sm flex items-center justify-center p-1">
             <img src="/logo.png" alt="Revenue Process Twin" className="w-full h-full object-contain" />
           </div>
-          <span className="font-display font-bold text-sm tracking-tight text-[var(--color-ink)]">
+          <span className="font-display font-bold text-base text-[var(--color-ink)]">
             Revenue Process Twin
           </span>
         </div>
@@ -175,7 +174,7 @@ function PipelineSection() {
       num: "02",
       title: "Process Conformance",
       sub: "Graph reconstruction",
-      desc: "Rebuilds every transaction into an ordered event graph (Invoice ? Discount ? Payment ? Renewal) to pinpoint exact process breaks.",
+      desc: "Rebuilds every transaction into an ordered event graph (Invoice → Discount → Payment → Renewal) to pinpoint exact process breaks.",
       icon: <GitBranch size={20} className="text-emerald-600" />,
       tag: "Deterministic Graph",
       bullets: ["Event-sequence conformance", "State-machine integrity checking", "Heuristic graph leak detection"]
@@ -184,7 +183,7 @@ function PipelineSection() {
       num: "03",
       title: "Leakage Triage",
       sub: "Counterfactual math",
-      desc: "Every alert calculates exact leak amount and recoverable potential with counterfactual simulations: 'If X was done, you recover ?Y'.",
+      desc: "Every alert calculates exact leak amount and recoverable potential with counterfactual simulations: 'If X was done, you recover ₹Y'.",
       icon: <Search size={20} className="text-amber-600" />,
       tag: "Evidence First",
       bullets: ["Causal evidence trail", "Automated recovery playbooks", "Tamper-evident audit ledger"]
@@ -197,7 +196,7 @@ function PipelineSection() {
         <Reveal>
           <div className="text-center mb-16">
             <div className="text-micro mb-3 text-[var(--color-accent)]">Architecture & Pipeline</div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--color-ink)] tracking-tight">
+            <h2 className="font-display font-bold text-3xl sm:text-5xl text-[var(--color-ink)] tracking-tight">
               How the Revenue Process Twin operates
             </h2>
             <p className="text-sm text-[var(--color-muted)] mt-3 max-w-lg mx-auto">
@@ -270,13 +269,6 @@ export default function Landing() {
     { icon: <TrendingDown size={18} />, title: "Churn caught early", description: "3-month revenue decline detected before Neon Retail subscription lapsed", date: "Silent churn • 71% risk score", iconBg: "rgba(184,134,46,0.09)", accentColor: "#b8862e" },
   ];
 
-  const steps = [
-    { icon: <Zap size={18} />, title: "Detect", desc: "Process mining and graph heuristics scan every invoice, payment, and renewal event for conformance breaks." },
-    { icon: <BarChart2 size={18} />, title: "Explain", desc: "Every alert comes with a counterfactual: 'If X had happened instead, here's what you'd have recovered.'" },
-    { icon: <Shield size={18} />, title: "Recover", desc: "One-click approve actions execute recovery workflows directly - reversal, re-invoice, outreach, or escalation." },
-    { icon: <FileText size={18} />, title: "Audit", desc: "Every action is logged with actor, timestamp, and outcome - full deterministic audit trail." },
-  ];
-
   const trust = [
     { icon: <Shield size={16} />, title: "Deterministic, not a black box", desc: "Every alert cites the exact process step that broke, the rule violated, and the evidence." },
     { icon: <FileText size={16} />, title: "Every action is audited", desc: "Full tamper-evident log of who executed what, when, and with what outcome." },
@@ -296,18 +288,19 @@ export default function Landing() {
 
       {/* Hero */}
       <section className="relative min-h-[95vh] flex flex-col items-center justify-center text-center px-6 py-24 overflow-hidden">
-        {/* Hero background image */}
+        {/* High-visibility Hero background image (opacity 0.28) */}
         <div className="absolute inset-0 z-0">
           <img
             src="/hero-bg.jpg"
-            alt=""
+            alt="Business Services Background"
             className="w-full h-full object-cover object-center"
-            style={{ opacity: 0.22, filter: "contrast(1.1) brightness(0.95)" }}
+            style={{ opacity: 0.28, filter: "contrast(1.15) brightness(0.95)" }}
           />
+          {/* Thinner frost overlay so photo remains crisp */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse at 50% 40%, rgba(250,250,252,0.65) 0%, rgba(245,245,248,0.92) 65%, #f5f5f8 100%)",
+              background: "radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.45) 0%, rgba(245,245,248,0.65) 65%, #f5f5f8 100%)",
             }}
           />
         </div>
@@ -330,7 +323,7 @@ export default function Landing() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08 }}
-            className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[var(--color-ink)] leading-[1.08] max-w-3xl"
+            className="font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[var(--color-ink)] leading-[1.08] max-w-3xl"
           >
             Find the revenue your process is losing.
           </motion.h1>
@@ -339,7 +332,7 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.16 }}
-            className="text-base sm:text-lg text-[var(--color-muted)] max-w-2xl mt-6 leading-relaxed"
+            className="text-base sm:text-lg text-[var(--color-muted)] max-w-2xl mt-6 leading-relaxed font-medium"
           >
             Revenue Process Twin continuously mines your billing, payment, and contract events to detect process breaks, calculate recoverable revenue, and trigger instant recovery.
           </motion.p>
@@ -383,7 +376,7 @@ export default function Landing() {
           <Reveal>
             <div className="text-center mb-12">
               <div className="text-micro mb-2 text-[var(--color-accent)]">Live Process Breaks</div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[var(--color-ink)]">
+              <h2 className="font-display font-bold text-2xl sm:text-4xl text-[var(--color-ink)]">
                 Real process deviations caught in production
               </h2>
             </div>
@@ -401,8 +394,10 @@ export default function Landing() {
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <div className="text-center mb-14">
-              <div className="text-micro mb-3">Live data preview</div>
-              <h2 className="text-3xl font-bold text-[var(--color-ink)]">Connected directly to the real engine.</h2>
+              <div className="text-micro mb-3 text-[var(--color-accent)]">Live Data Preview</div>
+              <h2 className="font-display font-bold text-3xl sm:text-5xl text-[var(--color-ink)]">
+                Connected directly to the real engine.
+              </h2>
               <p className="text-sm text-[var(--color-muted)] mt-3 max-w-sm mx-auto">
                 Live analytics generated by the deterministic conformance and recovery engine.
               </p>
@@ -450,15 +445,22 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Featured Quote Section */}
+      <div className="text-center py-16 px-6 bg-white border-t border-[var(--color-border)]">
+        <h2 className="font-display font-bold text-2xl sm:text-4xl text-[var(--color-ink)] max-w-3xl mx-auto leading-snug">
+          "Revenue leakage doesn't announce itself. <span className="text-[var(--color-accent)]">Your process should.</span>"
+        </h2>
+      </div>
+
       {/* Footer */}
-      <footer className="border-t border-[var(--color-border)] bg-white py-12 px-6">
+      <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-12 px-6">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--color-muted)]">
           <div className="flex items-center gap-2">
             <img src="/logo.png" alt="" className="w-5 h-5 object-contain" />
             <span className="font-semibold text-[var(--color-ink)]">Revenue Process Twin</span>
-            <span>- Continuous Conformance & Recovery Engine</span>
+            <span>• Continuous Conformance & Recovery Engine</span>
           </div>
-          <div>? 2026 Revenue Process Twin. All rights reserved.</div>
+          <div>© 2026 Revenue Process Twin. All rights reserved.</div>
         </div>
       </footer>
     </div>
