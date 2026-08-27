@@ -1,0 +1,139 @@
+{
+  "alerts": {
+    "page": 1,
+    "page_size": 25,
+    "total": 4,
+    "alerts": [
+      {
+        "alert_id": "ALT-00042",
+        "customer_id": "CUST-0042",
+        "customer_name": "Acme Corp",
+        "rule_id": "GF02",
+        "leak_type": "over_discount",
+        "severity": "critical",
+        "leak_amount_rs": 420000,
+        "recoverable_rs": 315000,
+        "process_break_step": "DISCOUNT_APPLIED",
+        "expected_next": "DISCOUNT_APPROVED",
+        "actual_next": "INVOICE_ISSUED",
+        "recommended_action": "Normalize discount from 68% to 12% plan median",
+        "status": "open",
+        "created_at": "2026-08-20T10:15:00Z"
+      },
+      {
+        "alert_id": "ALT-00108",
+        "customer_id": "CUST-0108",
+        "customer_name": "Vertex Ltd",
+        "rule_id": "GF05",
+        "leak_type": "duplicate_payment",
+        "severity": "high",
+        "leak_amount_rs": 120000,
+        "recoverable_rs": 120000,
+        "process_break_step": "PAYMENT_SUCCEEDED",
+        "expected_next": "SINGLE_SETTLEMENT",
+        "actual_next": "DUPLICATE_PAYMENT",
+        "recommended_action": "Process duplicate payment refund / credit adjustment",
+        "status": "open",
+        "created_at": "2026-08-21T11:00:00Z"
+      },
+      {
+        "alert_id": "ALT-00077",
+        "customer_id": "CUST-0077",
+        "customer_name": "Neon Retail",
+        "rule_id": "GF08",
+        "leak_type": "silent_churn",
+        "severity": "high",
+        "leak_amount_rs": 210000,
+        "recoverable_rs": 52500,
+        "process_break_step": "USAGE_DECLINE_FLAGGED",
+        "expected_next": "RETENTION_OUTREACH",
+        "actual_next": "RENEWAL_MISSED",
+        "recommended_action": "Initiate immediate executive retention outreach",
+        "status": "open",
+        "created_at": "2026-08-22T09:30:00Z"
+      },
+      {
+        "alert_id": "ALT-00031",
+        "customer_id": "CUST-0031",
+        "customer_name": "BlueStar",
+        "rule_id": "GF06",
+        "leak_type": "contractless_enterprise_discount",
+        "severity": "medium",
+        "leak_amount_rs": 45000,
+        "recoverable_rs": 31500,
+        "process_break_step": "DISCOUNT_APPLIED",
+        "expected_next": "CONTRACT_REF_LINKED",
+        "actual_next": "INVOICE_ISSUED",
+        "recommended_action": "Require valid contract reference before discount application",
+        "status": "open",
+        "created_at": "2026-08-23T14:20:00Z"
+      }
+    ]
+  },
+  "customer_risk": {
+    "customer_id": "CUST-0042",
+    "risk_score": 78,
+    "conformance_deviation_score": 0.62,
+    "churn_probability": 0.35,
+    "contributing_factors": [
+      { "factor": "GF02 discount approval gate violated", "weight": 0.4 },
+      { "factor": "3 invoices over plan median discount", "weight": 0.22 }
+    ]
+  },
+  "customer_explain": {
+    "customer_id": "CUST-0042",
+    "conformance_deviations": [
+      {
+        "rule_id": "GF02",
+        "process_break_step": "DISCOUNT_APPLIED",
+        "expected_next": "DISCOUNT_APPROVED",
+        "actual_next": "INVOICE_ISSUED",
+        "deviation_type": "MISSING_APPROVAL",
+        "leak_amount_rs": 420000,
+        "evidence": "Discount 68% applied on 2025-03-12 without approval record."
+      }
+    ],
+    "graph_links": {
+      "heuristic": "GH01",
+      "connected_entities": ["INV-1004", "INV-1007", "INV-1009", "Approver: AP-03"]
+    },
+    "counterfactual": {
+      "cf_id": "CF02",
+      "statement": "If discount normalized from 68% to 12% -> invoice amount increases by ₹3.8L.",
+      "estimated_recovery_rs": 380000,
+      "confidence": 0.75
+    },
+    "rule_traces": ["R03", "R11"]
+  },
+  "recoverable_summary": {
+    "total_leakage_rs": 795000,
+    "total_recoverable_rs": 519000,
+    "active_alerts": 4,
+    "avg_risk_score": 64,
+    "by_leak_type": [
+      { "leak_type": "over_discount", "leakage_rs": 420000, "recoverable_rs": 315000, "count": 1 },
+      { "leak_type": "duplicate_payment", "leakage_rs": 120000, "recoverable_rs": 120000, "count": 1 },
+      { "leak_type": "silent_churn", "leakage_rs": 210000, "recoverable_rs": 52500, "count": 1 },
+      { "leak_type": "contractless_enterprise_discount", "leakage_rs": 45000, "recoverable_rs": 31500, "count": 1 }
+    ]
+  },
+  "chat": {
+    "answer": "Acme Corp applied a 68% discount without approval on 11 invoices, breaking the discount-approval gate. Estimated leak: ₹4.2L. Normalizing the discount to the 12% plan median recovers approximately ₹3.15L.",
+    "leak_amount_rs": 420000,
+    "process_break": "DISCOUNT_APPLIED without DISCOUNT_APPROVED",
+    "connected_entities": ["INV-1004", "INV-1007", "INV-1009"],
+    "recommended_action": "Normalize discount to plan median (12%)",
+    "recovery_estimate_rs": 315000
+  },
+  "action_execute": {
+    "status": "success",
+    "audit_log_id": 1,
+    "executed_at": "2026-08-27T18:20:00Z"
+  },
+  "health": {
+    "status": "ok",
+    "db": "connected",
+    "model_loaded": true,
+    "narrator_mode": "mock"
+  }
+}
